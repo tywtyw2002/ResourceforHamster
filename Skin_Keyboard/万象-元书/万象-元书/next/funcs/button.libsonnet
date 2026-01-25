@@ -73,7 +73,7 @@
       });
 
       { [mkId('hint')]: base } + {
-        [mkHintId(k)]: wrapStyle(hint_actions[k].labels, std.get(hint_actions[k], 'style', theme.hint_fg))
+        [mkHintId(k)]: wrapStyle(hint_actions[k].label, std.get(hint_actions[k], 'style', theme.hint_fg))
         for k in std.objectFields(hint_actions)
       }
     ) else {};
@@ -94,7 +94,7 @@
           foregroundStyle: [mkHoldKey(i) for i in std.range(0, std.length(h_actions) - 1)],
         }),
       } + {
-        [mkHoldKey(i)]: wrapStyle(h_actions[i].labels, std.get(h_actions[i], 'style', theme.hold_fg))
+        [mkHoldKey(i)]: wrapStyle(h_actions[i].label, std.get(h_actions[i], 'style', theme.hold_fg))
         for i in std.range(0, std.length(h_actions) - 1)
       }
     ) else {};
