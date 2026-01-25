@@ -1,24 +1,28 @@
 {
   Button(name, spec, themeR, overrides={})::
     local mkId(suffix) = '%s_btn_%s' % [name, suffix];
-
     local theme = std.mergePatch(themeR, overrides);
 
-    local items = spec.actions;
+    // 1. 优化动作处理：配置化映射
+    local actionMap = {
+      action: 'action',
+      caps: 'uppercasedStateAction',
+      repeat: 'repeatAction',
+      preedit: 'preeditStateAction',
+      swipe_up: 'swipeUpAction',
+      swipe_down: 'swipeDownAction',
+      swipe_left: 'swipeLeftAction',
+      swipe_right: 'swipeRightAction',
+    };
     local actions = std.prune({
-      action: items.action,
-
-      uppercasedStateAction: std.get(items, 'caps'),
-      repeatAction: std.get(items, 'repeat'),
-      preeditStateAction: std.get(items, 'preedit'),
-
-      swipeUpAction: std.get(items, 'swipe_up'),
-      swipeDownAction: std.get(items, 'swipe_down'),
-      swipeLeftAction: std.get(items, 'swipe_left'),
-      swipeRightAction: std.get(items, 'swipe_right'),
+      [actionMap[k]]: std.get(spec.actions, k)
+      for k in std.objectFields(actionMap)
     });
 
-    // process styles
+    // 2. 样式上下文通用处理函数
+    local wrapStyle(labels, styleKey) = labels { ctx: styleKey };
+
+    // 3. 前景色样式 (Foreground Styles) 处理
     local kvMap = {
       fg: 'foregroundStyle',
       caps: 'capsLockedStateForegroundStyle',
@@ -27,122 +31,82 @@
     };
     local labels = spec.labels;
 
-    local activeKeys = std.set(
-      [
-        k
-        for k in std.flattenArrays([std.objectFields(z) for z in std.objectValues(labels)])
-        if std.objectHas(kvMap, k)
-      ]
-    );
+    // 获取所有在 labels 中定义的且在 kvMap 中的 key
+    local activeKeys = std.set([
+      k
+      for item in std.objectValues(labels)
+      for k in std.objectFields(item)
+      if std.objectHas(kvMap, k)
+    ]);
 
     local fg_styles = {
       [kvMap[k]]: [
         local itemObj = labels[item];
-        if std.objectHas(itemObj, k) then
-          mkId(item + '_' + k)
-        else if std.objectHas(itemObj, 'fg') then
-          mkId(item + '_fg')
+        // 逻辑优化：如果当前状态没有定义，则回退到 'fg'
+        local suffix = if std.objectHas(itemObj, k) then k else 'fg';
+        mkId(item + '_' + suffix)
         for item in std.objectFields(labels)
       ]
       for k in activeKeys
     };
 
-    // process fg styles instances
-    local getStyleContent(actionKey, statusKey) =
-      // actionKey  main up down ....
-      // statusKey fg caps...
-      local key = if actionKey == 'main' then statusKey else '%s_%s' % [statusKey, actionKey];
-      local sKey = std.get(theme, key, theme.fg);
-      { ctx: sKey };
-
     local fg_defines = {
-      [mkId(k + '_' + sk)]: labels[k][sk] + getStyleContent(k, sk)
+      [mkId(k + '_' + sk)]:
+        local sKey = if k == 'main' then sk else '%s_%s' % [sk, k];
+        wrapStyle(labels[k][sk], std.get(theme, sKey, theme.fg))
       for k in std.objectFields(labels)
       for sk in std.objectFields(labels[k])
     };
 
-    // hintStyle
-    local getHintStyle(action) =
-      local sKey = std.get(action, 'style', theme.hint_fg);
-      { ctx: sKey };
-
-    local genHintStyle(actions) =
+    // 4. Hint 样式优化
+    local hint_actions = std.get(spec, 'hint', {});
+    local hint_defines = if std.length(hint_actions) > 0 then (
       local mkHintId(k) = mkId('hint_' + k);
-      local genStyleName(name) = if std.objectHas(actions, name) then mkHintId(name) else null;
+      local swipeMap = { fg: 'foregroundStyle', up: 'swipeUpForegroundStyle', down: 'swipeDownForegroundStyle', left: 'swipeLeftForegroundStyle', right: 'swipeRightForegroundStyle' };
 
       local base = std.prune({
         insets: theme.hint_insets,
         backgroundStyle: theme.hint_bg,
-        foregroundStyle: genStyleName('fg'),
-        swipeUpForegroundStyle: genStyleName('up'),
-        swipeDownForegroundStyle: genStyleName('down'),
-        swipeLeftForegroundStyle: genStyleName('left'),
-        swipeRightForegroundStyle: genStyleName('right'),
+      } + {
+        [swipeMap[k]]: if std.objectHas(hint_actions, k) then mkHintId(k)
+        for k in std.objectFields(swipeMap)
       });
 
-      // rules
-      local style_rules = {
-        [genStyleName(e.key)]: e.value.labels + getHintStyle(e.value)
-        for e in std.objectKeysValues(actions)
-      };
+      { [mkId('hint')]: base } + {
+        [mkHintId(k)]: wrapStyle(hint_actions[k].labels, std.get(hint_actions[k], 'style', theme.hint_fg))
+        for k in std.objectFields(hint_actions)
+      }
+    ) else {};
 
-      {
-        [mkId('hint')]: base,
-      } + style_rules;
-
-    local hint_actions = std.get(spec, 'hint', {});
-    local hint_defines = if std.length(hint_actions) > 0 then
-      genHintStyle(hint_actions)
-    else
-      {};
-
-    // holdSymbolsStyle
-    local getHoldStyle(action) =
-      local sKey = std.get(action, 'style', theme.hold_fg);
-      { ctx: sKey };
-
-    local genHoldStyles(payloads) =
-      local actions = payloads.actions;
+    // 5. Hold 样式优化
+    local hold_payloads = std.get(spec, 'hold', {});
+    local hold_defines = if std.length(hold_payloads) > 0 then (
+      local h_actions = hold_payloads.actions;
       local mkHoldKey(i) = mkId('hold_action_%d' % i);
 
-      local rules = {
-        [if std.length(theme.hold_insets) > 0 then 'insets']: theme.hold_insets,
-        backgroundStyle: theme.hold_bg,
-        selectedStyle: theme.hold_select,
-        selectedIndex: std.get(payloads, 'index', 1),
-        actions: [a.action for a in actions],
-        foregroundStyle: [
-          mkHoldKey(i)
-          for i in std.range(0, std.length(actions) - 1)
-        ],
-      };
-
-      local style_rules = {
-        [mkHoldKey(i)]:
-          local action = actions[i];
-          action.labels + getHoldStyle(action)
-        for i in std.range(0, std.length(actions) - 1)
-      };
-
       {
-        [mkId('hold')]: rules,
-      } + style_rules;
+        [mkId('hold')]: std.prune({
+          insets: theme.hold_insets,
+          backgroundStyle: theme.hold_bg,
+          selectedStyle: theme.hold_select,
+          selectedIndex: std.get(hold_payloads, 'index', 1),
+          actions: [a.action for a in h_actions],
+          foregroundStyle: [mkHoldKey(i) for i in std.range(0, std.length(h_actions) - 1)],
+        }),
+      } + {
+        [mkHoldKey(i)]: wrapStyle(h_actions[i].labels, std.get(h_actions[i], 'style', theme.hold_fg))
+        for i in std.range(0, std.length(h_actions) - 1)
+      }
+    ) else {};
 
-    local hold_actions = std.get(spec, 'hold', {});
-    local hold_defines = if std.length(hold_actions) > 0 then
-      genHoldStyles(hold_actions)
-    else
-      {};
-
-    // root_rules
-    local root_rules = {
-      // size
+    // 6. 根规则合并
+    local root_rules = std.prune({
       size: theme.size,
       backgroundStyle: theme.bg,
-      [if std.length(std.get(theme, 'bounds', {})) > 0 then 'bounds']: theme.bounds,
-      [if std.length(hold_actions) > 0 then 'holdSymbolsStyle']: mkId('hold'),
-      [if std.length(hint_actions) > 0 then 'hintStyle']: mkId('hint'),
-    };
+      bounds: if std.length(std.get(theme, 'bounds', {})) > 0 then theme.bounds,
+      holdSymbolsStyle: if std.length(hold_payloads) > 0 then mkId('hold'),
+      hintStyle: if std.length(hint_actions) > 0 then mkId('hint'),
+    });
 
     {
       [mkId('_root')]: root_rules + actions + fg_styles,
