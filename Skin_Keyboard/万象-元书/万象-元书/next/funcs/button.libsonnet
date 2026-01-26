@@ -73,7 +73,9 @@
       });
 
       { [mkId('hint')]: base } + {
-        [mkHintId(k)]: wrapStyle(hint_actions[k].label, std.get(hint_actions[k], 'style', theme.hint_fg))
+        // [mkHintId(k)]: wrapStyle(hint_actions[k].label, std.get(hint_actions[k], 'style', theme.hint_fg))
+        // do not support hint style.
+        [mkHintId(k)]: wrapStyle(hint_actions[k].label, theme.hint_fg)
         for k in std.objectFields(hint_actions)
       }
     ) else {};
