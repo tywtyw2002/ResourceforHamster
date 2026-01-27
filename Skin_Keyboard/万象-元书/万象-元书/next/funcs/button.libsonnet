@@ -52,8 +52,9 @@
 
     local fg_defines = {
       [mkId(k + '_' + sk)]:
-        local sKey = if k == 'main' then sk else '%s_%s' % [sk, k];
-        wrapStyle(labels[k][sk], std.get(theme, sKey, theme.fg))
+        local sKey = if k == 'main' then sk else '%s_%s' % [k, sk];
+        local sKeyFix = if std.endsWith(sKey, 'fg') then sKey else sKey + '_fg';
+        wrapStyle(labels[k][sk], std.get(theme, sKeyFix, theme.fg))
       for k in std.objectFields(labels)
       for sk in std.objectFields(labels[k])
     };
@@ -90,7 +91,7 @@
         [mkId('hold')]: std.prune({
           insets: theme.hold_insets,
           backgroundStyle: theme.hold_bg,
-          selectedStyle: theme.hold_select,
+          selectedStyle: theme.hold_select_bg,
           selectedIndex: std.get(hold_payloads, 'index', 1),
           actions: [a.action for a in h_actions],
           foregroundStyle: [mkHoldKey(i) for i in std.range(0, std.length(h_actions) - 1)],
