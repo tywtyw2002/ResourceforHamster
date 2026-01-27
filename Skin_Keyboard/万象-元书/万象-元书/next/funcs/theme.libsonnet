@@ -1,3 +1,14 @@
+local stringifyNumbers(val) =
+  // if true then val else
+  if std.isObject(val) then
+    { [k]: stringifyNumbers(val[k]) for k in std.objectFields(val) }
+  else if std.isArray(val) then
+    [stringifyNumbers(v) for v in val]
+  else if std.isNumber(val) then
+    std.format('%.10g', val)
+  else
+    val;
+
 {
   // mkTheme 函数
   // 优化内容：修复了 stripChars 的逻辑错误，使用推导式提升可读性
