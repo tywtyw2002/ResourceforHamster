@@ -1,81 +1,53 @@
 {
   // mkTheme 函数
-  // 参数:
-  //   prefix: 主题前缀字符串
-  //   config: 配置对象
-  //   override: 覆盖配置（可选）
-  // 返回: [themeRef, themeStyle, styleRef]
+  // 优化内容：修复了 stripChars 的逻辑错误，使用推导式提升可读性
   mkTheme(prefix, config, override={})::
     local actualConfig = config + override;
 
-    // 辅助函数：将 snake_case 转换为 CamelCase (首字母大写)
-    local toCamelCase(str) =
-      local parts = std.split(str, '_');
-      local capitalized = std.map(function(part)
-        std.asciiUpper(part[0:1]) + part[1:], parts);
-      std.join('', capitalized);
+    // 内部辅助：首字母大写
+    local capitalize(s) = if std.length(s) > 0 then std.asciiUpper(s[0]) + s[1:] else s;
 
-    // 辅助函数：生成引用名
+    // 内部辅助：snake_case 转 CamelCase
+    local toCamelCase(str) =
+      std.join('', [capitalize(part) for part in std.split(str, '_')]);
+
+    // 内部辅助：安全移除后缀并生成 RefName
     local makeRefName(key) =
-      if std.endsWith(key, '_bg') then
-        local baseName = std.stripChars(key, '_bg');
-        prefix + toCamelCase(baseName) + 'BG'
+      if key == 'bg' || key == 'fg' then
+        prefix + std.asciiUpper(key)
+      else if std.endsWith(key, '_bg') then
+        prefix + toCamelCase(key[0:std.length(key) - 3]) + 'BG'
       else if std.endsWith(key, '_fg') then
-        local baseName = std.stripChars(key, '_fg');
-        prefix + toCamelCase(baseName) + 'FG'
-      else if key == 'bg' then
-        prefix + 'BG'
-      else if key == 'fg' then
-        prefix + 'FG'
+        prefix + toCamelCase(key[0:std.length(key) - 3]) + 'FG'
       else
         prefix + toCamelCase(key);
 
-    // 生成 themeRef
-    local themeRef =
-      // 首先添加 mixin 中的内容
-      (if std.objectHas(actualConfig, 'mixin') then actualConfig.mixin else {}) +
+    // 预过滤有效字段，避免在后续多次循环中重复判断
+    local validFields = [
+      f
+      for f in std.objectFields(actualConfig)
+      if f != 'mixin' && f != 'const' && !std.startsWith(f, '_')
+    ];
 
-      // 然后生成其他字段的引用
-      std.foldl(
-        function(acc, key)
-          if key == 'mixin' || key == 'const' || std.startsWith(key, '_') then
-            acc
-          else
-            acc { [key]: makeRefName(key) }
-        ,
-        std.objectFields(actualConfig),
-        {}
-      );
+    // 1. 生成 themeRef
+    local themeRef = (if std.objectHas(actualConfig, 'mixin') then actualConfig.mixin else {}) + {
+      [f]: makeRefName(f)
+      for f in validFields
+    };
 
-    // 生成 themeStyle (所有 _bg 结尾的或 bg)
-    local themeStyle =
-      std.foldl(
-        function(acc, key)
-          if (std.endsWith(key, '_bg') || key == 'bg') &&
-             key != 'mixin' && key != 'const' && !std.startsWith(key, '_') then
-            local refName = themeRef[key];
-            acc { [refName]: actualConfig[key] }
-          else
-            acc
-        ,
-        std.objectFields(actualConfig),
-        {}
-      );
+    // 2. 生成 themeStyle (处理所有背景相关的配置)
+    local themeStyle = {
+      [themeRef[f]]: actualConfig[f]
+      for f in validFields
+      if f == 'bg' || std.endsWith(f, '_bg')
+    };
 
-    // 生成 styleRef (所有 _fg 结尾的或 fg)
-    local styleRef =
-      std.foldl(
-        function(acc, key)
-          if (std.endsWith(key, '_fg') || key == 'fg') &&
-             key != 'mixin' && key != 'const' && !std.startsWith(key, '_') then
-            local refName = themeRef[key];
-            acc { [refName]: actualConfig[key] }
-          else
-            acc
-        ,
-        std.objectFields(actualConfig),
-        {}
-      );
+    // 3. 生成 styleRef (处理所有前景相关的配置)
+    local styleRef = {
+      [themeRef[f]]: actualConfig[f]
+      for f in validFields
+      if f == 'fg' || std.endsWith(f, '_fg')
+    };
 
     [themeRef, themeStyle, styleRef],
 }
