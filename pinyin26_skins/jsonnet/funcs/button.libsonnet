@@ -1,4 +1,4 @@
-{
+function(styleRef) {
   Button(name, spec, themeR, overrides={})::
     local mkId(suffix) = '%s_btn_%s' % [name, suffix];
     local theme = std.mergePatch(themeR, overrides);
@@ -20,7 +20,7 @@
     });
 
     // 2. 样式上下文通用处理函数
-    local wrapStyle(labels, styleKey) = labels { ctx: styleKey };
+    local wrapStyle(labels, styleKey) = labels + std.get(styleRef, styleKey, { _note_not_found: styleKey });
 
     // 3. 前景色样式 (Foreground Styles) 处理
     local kvMap = {
