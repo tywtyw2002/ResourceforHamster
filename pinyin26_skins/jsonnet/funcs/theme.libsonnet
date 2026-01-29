@@ -48,7 +48,9 @@ local stringifyNumbers(val) =
 
     // 2. 生成 themeStyle (处理所有背景相关的配置)
     local themeStyle = {
-      [themeRef[f]]: actualConfig[f]
+      [themeRef[f]]: actualConfig[f] {
+        type: 'original',
+      }
       for f in validFields
       if f == 'bg' || std.endsWith(f, '_bg')
     };
