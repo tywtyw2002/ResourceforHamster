@@ -37,7 +37,7 @@ local theme_config_alphabet = {
 
   mixin: {
     size: { width: { percentage: 0.12 } },
-    hold_insets: $.const.insets,
+    hold_insets: { top: 3, bottom: 3, left: 8, right: 8 },
     hint_insets: $.const.insets,
   },
 

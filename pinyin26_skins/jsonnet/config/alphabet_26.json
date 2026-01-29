@@ -1,0 +1,409 @@
+{
+    "q": {
+        "action": "q",
+        "swipe": {
+            "up": 1,
+            "down": "~"
+        },
+        "hold": {
+            "actions": [
+                "Q",
+                "q",
+                {
+                    "symbol": "➊"
+                }
+            ],
+            "select_index": 0
+        }
+    },
+    "w": {
+        "action": "w",
+        "swipe": {
+            "up": 2,
+            "down": "@"
+        },
+        "hold": {
+            "actions": [
+                "w",
+                "W",
+                {
+                    "symbol": "➋"
+                }
+            ]
+        }
+    },
+    "e": {
+        "action": "e",
+        "swipe": {
+            "up": "3",
+            "down": "#"
+        },
+        "hold": {
+            "actions": [
+                "e",
+                "E",
+                {
+                    "symbol": "➌"
+                }
+            ]
+        }
+    },
+    "r": {
+        "action": "r",
+        "swipe": {
+            "up": "4",
+            "down": "$"
+        },
+        "hold": {
+            "actions": [
+                "r",
+                "R",
+                {
+                    "symbol": "➍"
+                }
+            ]
+        }
+    },
+    "t": {
+        "action": "t",
+        "swipe": {
+            "up": "5",
+            "down": "%"
+        },
+        "hold": {
+            "actions": [
+                "t",
+                "T",
+                {
+                    "symbol": "➎"
+                }
+            ]
+        }
+    },
+    "y": {
+        "action": "y",
+        "swipe": {
+            "up": "6",
+            "down": "^"
+        },
+        "hold": {
+            "actions": [
+                "y",
+                "Y",
+                {
+                    "symbol": "➏"
+                }
+            ]
+        }
+    },
+    "u": {
+        "action": "u",
+        "swipe": {
+            "up": "7",
+            "down": "\u0026"
+        },
+        "hold": {
+            "actions": [
+                "u",
+                "U",
+                {
+                    "symbol": "➐"
+                }
+            ]
+        }
+    },
+    "i": {
+        "action": "i",
+        "swipe": {
+            "up": "8",
+            "down": "*"
+        },
+        "hold": {
+            "actions": [
+                "i",
+                "I",
+                {
+                    "symbol": "➑"
+                }
+            ]
+        }
+    },
+    "o": {
+        "action": "o",
+        "swipe": {
+            "up": "9",
+            "down": "("
+        },
+        "hold": {
+            "actions": [
+                "o",
+                "O",
+                {
+                    "symbol": "➒"
+                }
+            ]
+        }
+    },
+    "p": {
+        "action": "p",
+        "swipe": {
+            "up": "0",
+            "down": ")"
+        },
+        "hold": {
+            "actions": [
+                {
+                    "symbol": "🄌"
+                },
+                "p",
+                "P"
+            ],
+            "select_index": 2
+        }
+    },
+    "a": {
+        "action": "a",
+        "swipe": {
+            "up": "`",
+            "down": "~"
+        },
+        "hold": {
+            "actions": [
+                "A",
+                "a"
+            ],
+            "select_index": 0
+        },
+        "overrides": {
+            "bounds": {
+                "width": "2/3",
+                "alignment": "right"
+            },
+            "size": {
+                "width": {
+                    "percentage": 0.15
+                }
+            }
+        }
+    },
+    "s": {
+        "action": "s",
+        "swipe": {
+            "up": "-",
+            "down": {
+                "symbol": "_"
+            }
+        },
+        "hold": {
+            "actions": [
+                "s",
+                "S"
+            ]
+        }
+    },
+    "d": {
+        "action": "d",
+        "swipe": {
+            "up": {
+                "symbol": "="
+            },
+            "down": "+"
+        },
+        "hold": {
+            "actions": [
+                "d",
+                "D"
+            ]
+        }
+    },
+    "f": {
+        "action": "f",
+        "swipe": {
+            "up": {
+                "symbol": "["
+            },
+            "down": "{"
+        },
+        "hold": {
+            "actions": [
+                "f",
+                "F"
+            ]
+        }
+    },
+    "g": {
+        "action": "g",
+        "swipe": {
+            "up": {
+                "symbol": "]"
+            },
+            "down": "}"
+        },
+        "hold": {
+            "actions": [
+                "g",
+                "G"
+            ]
+        }
+    },
+    "h": {
+        "action": "h",
+        "swipe": {
+            "up": {
+                "symbol": "\\"
+            },
+            "down": "|"
+        },
+        "hold": {
+            "actions": [
+                "h",
+                "H"
+            ]
+        }
+    },
+    "j": {
+        "action": "j",
+        "swipe": {
+            "up": "/",
+            "down": "."
+        },
+        "hold": {
+            "actions": [
+                "j",
+                "J"
+            ]
+        }
+    },
+    "k": {
+        "action": "k",
+        "swipe": {
+            "up": ":",
+            "down": ";"
+        },
+        "hold": {
+            "actions": [
+                "k",
+                "K"
+            ]
+        }
+    },
+    "l": {
+        "action": "l",
+        "swipe": {
+            "up": "\"",
+            "down": "'"
+        },
+        "hold": {
+            "actions": [
+                "l",
+                "L"
+            ]
+        },
+        "overrides": {
+            "bounds": {
+                "width": "2/3",
+                "alignment": "left"
+            },
+            "size": {
+                "width": {
+                    "percentage": 0.15
+                }
+            }
+        }
+    },
+    "z": {
+        "action": "z",
+        "swipe": {
+            "up": {
+                "action": "tab",
+                "label": "⇥"
+            }
+        },
+        "hold": {
+            "actions": [
+                "z",
+                "Z"
+            ]
+        }
+    },
+    "x": {
+        "action": "x",
+        "swipe": {
+            "up": {
+                "character": "["
+            }
+        },
+        "hold": {
+            "actions": [
+                "x",
+                "X"
+            ]
+        }
+    },
+    "c": {
+        "action": "c",
+        "swipe": {
+            "up": {
+                "character": "]"
+            }
+        },
+        "hold": {
+            "actions": [
+                "c",
+                "C"
+            ]
+        }
+    },
+    "v": {
+        "action": "v",
+        "swipe": {
+            "up": {
+                "character": "\u003c"
+            }
+        },
+        "hold": {
+            "actions": [
+                "v",
+                "V"
+            ]
+        }
+    },
+    "b": {
+        "action": "b",
+        "swipe": {
+            "up": {
+                "character": "\u003e"
+            }
+        },
+        "hold": {
+            "actions": [
+                "b",
+                "B"
+            ]
+        }
+    },
+    "n": {
+        "action": "n",
+        "swipe": {
+            "up": "!"
+        },
+        "hold": {
+            "actions": [
+                "n",
+                "N"
+            ]
+        }
+    },
+    "m": {
+        "action": "m",
+        "swipe": {
+            "up": "?"
+        },
+        "hold": {
+            "actions": [
+                "m",
+                "M"
+            ]
+        }
+    }
+}

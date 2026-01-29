@@ -1,0 +1,155 @@
+[q]
+action = "q"
+swipe.up = 1
+swipe.down = "~"
+hold.actions = ["Q", "q", { symbol = "➊" }]
+hold.select_index = 0
+
+[w]
+action = "w"
+swipe.up = 2
+swipe.down = "@"
+hold.actions = ["w", "W", { symbol = "➋" }]
+
+[e]
+action = "e"
+swipe.up = "3"
+swipe.down = "#"
+hold.actions = ["e", "E", { symbol = "➌" }]
+
+[r]
+action = "r"
+swipe.up = "4"
+swipe.down = "$"
+hold.actions = ["r", "R", { symbol = "➍" }]
+
+[t]
+action = "t"
+swipe.up = "5"
+swipe.down = "%"
+hold.actions = ["t", "T", { symbol = "➎" }]
+
+[y]
+action = "y"
+swipe.up = "6"
+swipe.down = "^"
+hold.actions = ["y", "Y", { symbol = "➏" }]
+
+[u]
+action = "u"
+swipe.up = "7"
+swipe.down = "&"
+hold.actions = ["u", "U", { symbol = "➐" }]
+
+[i]
+action = "i"
+swipe.up = "8"
+swipe.down = "*"
+hold.actions = ["i", "I", { symbol = "➑" }]
+
+[o]
+action = "o"
+swipe.up = "9"
+swipe.down = "("
+hold.actions = ["o", "O", { symbol = "➒" }]
+
+[p]
+action = "p"
+swipe.up = "0"
+swipe.down = ")"
+hold.actions = [{ symbol = "🄌" }, "p", "P"]
+hold.select_index = 2
+
+[a]
+action = "a"
+swipe.up = "`"
+swipe.down = "~"
+hold.actions = ["A", "a"]
+hold.select_index = 0
+overrides.bounds = { width = "2/3", alignment = "right" }
+overrides.size.width = { percentage = 0.15 }
+
+[s]
+action = "s"
+swipe.up = "-"
+swipe.down = { symbol = "_" }
+hold.actions = ["s", "S"]
+
+[d]
+action = "d"
+swipe.up = { symbol = "=" }
+swipe.down = "+"
+hold.actions = ["d", "D"]
+
+[f]
+action = "f"
+swipe.up = { symbol = "[" }
+swipe.down = "{"
+hold.actions = ["f", "F"]
+
+[g]
+action = "g"
+swipe.up = { symbol = "]" }
+swipe.down = "}"
+hold.actions = ["g", "G"]
+
+[h]
+action = "h"
+swipe.up = { symbol = "\\" }
+swipe.down = "|"
+hold.actions = ["h", "H"]
+
+[j]
+action = "j"
+swipe.up = "/"
+swipe.down = "."
+hold.actions = ["j", "J"]
+
+[k]
+action = "k"
+swipe.up = ":"
+swipe.down = ";"
+hold.actions = ["k", "K"]
+
+[l]
+action = "l"
+swipe.up = "\""
+swipe.down = "'"
+hold.actions = ["l", "L"]
+overrides.bounds = { width = "2/3", alignment = "left" }
+overrides.size.width = { percentage = 0.15 }
+
+[z]
+action = "z"
+swipe.up = { action = "tab", label = "⇥" }
+hold.actions = ["z", "Z"]
+
+[x]
+action = "x"
+swipe.up = { character = "[" }
+hold.actions = ["x", "X"]
+
+[c]
+action = "c"
+swipe.up = { character = "]" }
+hold.actions = ["c", "C"]
+
+[v]
+action = "v"
+swipe.up = { character = "<" }
+hold.actions = ["v", "V"]
+
+[b]
+action = "b"
+swipe.up = { character = ">" }
+hold.actions = ["b", "B"]
+
+[n]
+action = "n"
+swipe.up = "!"
+hold.actions = ["n", "N"]
+
+[m]
+action = "m"
+swipe.up = "?"
+hold.actions = ["m", "M"]
