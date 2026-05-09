@@ -63,4 +63,47 @@ local stringifyNumbers(val) =
     };
 
     [themeRef, themeStyle, styleRef],
+
+  mkThemeTb(prefix, config, override={})::
+    local actualConfig = config + override;
+
+    // 内部辅助：首字母大写
+    local capitalize(s) = if std.length(s) > 0 then std.asciiUpper(s[0]) + s[1:] else s;
+
+    local toCamelCase(str) =
+      std.join('', [capitalize(part) for part in std.split(str, '_')]);
+
+    local makeRefName(key) =
+      if key == 'bg' || key == 'fg' then
+        prefix + std.asciiUpper(key)
+      else if std.endsWith(key, '_bg') then
+        prefix + toCamelCase(key[0:std.length(key) - 3]) + 'BG'
+      else if std.endsWith(key, '_fg') then
+        prefix + toCamelCase(key[0:std.length(key) - 3]) + 'FG'
+      else
+        prefix + toCamelCase(key);
+
+    local themeRef = {
+      [f]: makeRefName(f)
+      for f in std.objectFields(actualConfig)
+    };
+
+    local makeKMap(x) =
+      local kv = std.get(x, '_kmap', {});
+      {
+        [k]: x[k]
+        for k in std.objectFields(x)
+        if k != '_kmap'
+      } +
+      {
+        [k]: themeRef[kv[k]]
+        for k in std.objectFields(kv)
+      };
+
+    local styleRef = {
+      [themeRef[f]]: makeKMap(actualConfig[f])
+      for f in std.objectFields(themeRef)
+    };
+
+    [themeRef, styleRef],
 }

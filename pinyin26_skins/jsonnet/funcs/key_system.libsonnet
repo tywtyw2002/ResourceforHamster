@@ -36,6 +36,9 @@ local utils = import 'utils.libsonnet';
 
     local activeSwipeKeys = [k for k in swipeKeys if 'swipe_' + k in actions];
 
+    // process preedit labels
+    local hasPreedit = std.objectHas(std.get(actions, 'preedit', {}), 'label');
+
     // 构造 labels (包含原有逻辑 + 需求 1 的 extraLabels)
     local labels = {
       main:
@@ -45,6 +48,9 @@ local utils = import 'utils.libsonnet';
           [if hasCaps then 'caps']: actions.caps.label,
           [if hasCaps then 'upper']: if std.objectHas(actions, 'upper') then actions.upper.label else self.caps,
         },
+      [if hasPreedit then 'preedit']: {
+        fg: actions.preedit.label,
+      },
     } + {
       ['swipe_' + k]: { fg: actions['swipe_' + k].label }
       for k in activeSwipeKeys
