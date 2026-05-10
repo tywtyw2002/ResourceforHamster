@@ -35,14 +35,19 @@ local _all = [
   keyboard_layout,
   keyboard_extra,
   tb_theme[1],  // keyboard styles.
-  k_alphabetic.pinyin(),
-  k_func.pinyin(),
-  k_system.pinyin(),
+  k_alphabetic.default(),
+  k_func.default(),
+  // k_system.pinyin(),
   k_toolbar.default(),
 ];
 
-std.foldl(
+local mkOut(x) = std.foldl(
   function(acc, e) acc + e,
-  _all,
+  _all + x,
   {}
-)
+);
+
+{
+  pinyin_26_portrait: mkOut(k_system.pinyin()),
+  alphabetic_26_portrait: mkOut(k_system.alphabetic()),
+}

@@ -63,6 +63,9 @@ local key_zhen = {
   action: { keyboardType: 'alphabetic', label: { assetImageName: 'chineseState' } },
 };
 
+local key_zhen_en = {
+  action: { keyboardType: 'alphabetic', label: { assetImageName: 'englishState' } },
+};
 
 local key_comma = {
   action: { character: ',', label: '，' },
@@ -132,8 +135,31 @@ local key_entry_label_code = |||
   }
 |||;
 
-local key_enter = {
-  action: { action: 'enter', label: { text: key_entry_label_code } },
+local key_entry_label_code_en = |||
+  // JavaScript
+  function getText() {
+    const type = $getReturnKeyType();
+    switch (type) {
+      case 1:
+        return "Go";
+      case 3:
+        return "Join";
+      case 4:
+        return "Go";
+      case 6:
+        return "Search"
+      case 7:
+        return "Send"
+      case 9:
+        return "Finish";
+      default:
+        return "Enter";
+    }
+  }
+|||;
+
+local key_enter(label_code) = {
+  action: { action: 'enter', label: { text: label_code } },
   swipe: {
     up: { shortcutCommand: '#换行', label: null },
   },
@@ -145,15 +171,23 @@ local key_enter = {
 
 
 // defined key
-local config_keys = {
+local config_keys_comm = {
   shift: key_shift,
   backspace: key_backspace,
   '123': key_123,
-  zhen: key_zhen,
   comma: key_comma,
   space: key_space,
   dot: key_dot,
-  enter: key_enter,
+};
+
+local config_keys_zh = config_keys_comm {
+  enter: key_enter(key_entry_label_code),
+  zhen: key_zhen,
+};
+
+local config_keys_en = config_keys_comm {
+  enter: key_enter(key_entry_label_code_en),
+  zhen: key_zhen_en,
 };
 
 // build alphabet_key
@@ -162,8 +196,7 @@ local mkKey(elem) =
   local spec = system_key.BuildSpec(elem.value);
   btn.Button('kp_' + elem.key, spec, system_theme[0], std.get(elem.value, 'overrides', {}));
 
-
-local system_config() =
+local system_config(config_keys) =
   local system = std.foldl(
     function(acc, e) acc + mkKey(e),
     std.objectKeysValues(config_keys),
@@ -171,12 +204,10 @@ local system_config() =
   );
   system_theme[1] + system;
 
-
 {
   pinyin()::
-    system_config(),
+    system_config(config_keys_zh),
 
-  // alphabetic():: {
-
-  // },
+  alphabetic()::
+    system_config(config_keys_en),
 }

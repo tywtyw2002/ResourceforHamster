@@ -19,7 +19,7 @@ local mkKey(elem) =
 
 
 {
-  pinyin()::
+  default()::
     local alphabet = std.foldl(
       function(acc, e) acc + mkKey(e),
       std.objectKeysValues(config_alphabet_26),

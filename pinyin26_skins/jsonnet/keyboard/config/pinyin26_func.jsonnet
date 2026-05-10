@@ -107,6 +107,6 @@ local func_config() =
   func_theme[1] + func_keys;
 
 {
-  pinyin()::
+  default()::
     func_config(),
 }
