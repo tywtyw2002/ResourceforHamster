@@ -161,6 +161,37 @@ local theme_config_func = {
   'hold_fg',
 ]);
 
+local theme_config_keyboard = {
+  bg: {
+    type: 'original',
+    normalColor: '2C2C2C',
+  },
+  preedit: {
+    _kmap: {
+      backgroundStyle: 'bg',
+      foregroundStyle: 'preedit_fg',
+    },
+    insets: { left: 4, top: 2 },
+
+  },
+  preedit_fg: {
+    textColor: 'ffffff',
+    fontSize: '0.815em',
+  },
+  row_style: {
+    _kmap: {
+      backgroundStyle: 'bg',
+    },
+    size: { height: 45 },
+  },
+  keyboard_style: {
+    _kmap: {
+      backgroundStyle: 'bg',
+    },
+    size: { height: 230 },
+  },
+};
+
 local theme_config_toolbar = {
   fg: {
     normalColor: 'E5E5EA',
@@ -173,10 +204,7 @@ local theme_config_toolbar = {
     highlightColor: '00000000',
   },
 
-  root_bg: {
-    type: 'original',
-    normalColor: '2C2C2C03',
-  },
+  root_bg: theme_config_keyboard.bg,
   // horizontalCandidateStyle
   h_bg: {
     _kmap: { candidateStateButtonStyle: 'h_state' },
@@ -274,4 +302,5 @@ local theme_config_toolbar = {
   system: theme_config_system,
   func: theme_config_func,
   toolbar: theme_config_toolbar,
+  keyboard: theme_config_keyboard,
 }
